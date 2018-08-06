@@ -1,0 +1,13 @@
+[package]
+name = "youdao_rs"
+version = "0.1.0"
+authors = ["wangchi <wangchi@meican.com>"]
+
+[dependencies]
+ansi_term = "0.10"
+scraper = "0.7.0"
+select = "0.4.2"
+reqwest = "0.8.6"
+percent-encoding = "1.0.1"
+itertools = "0.7.8"
+rodio = "0.8.0"
