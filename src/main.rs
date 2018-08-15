@@ -97,6 +97,7 @@ fn play_sound(app: &App)  {
     let device = rodio::default_output_device().unwrap();
     let mut file = tempfile().unwrap();
     file.write_all(&buf).unwrap();
+    let file = tempfile().unwrap();
     let buf_reader = BufReader::new(file);
     let source = rodio::Decoder::new(buf_reader).unwrap();
     rodio::play_raw(&device, source.convert_samples());
