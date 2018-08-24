@@ -134,15 +134,16 @@ fn basic_query_eng(fragment: &Html, is_multi: bool) -> Result<(), Box<::std::err
     for m in means {
         println!(
             "  {}",
-            Colour::Blue.paint(join(&m.text().collect::<Vec<_>>(), "").trim())
+            Colour::Blue.paint(join(&m.text().collect::<Vec<_>>(), ""))
         );
     }
     Ok(())
 }
 
 fn pronounce_output_select(select: Select) {
+
     let t_vec = select
-        .collect::<Vec<_>>()
+        .collect::<Vec<scraper::ElementRef>>()
         .first()
         .unwrap()
         .text()
