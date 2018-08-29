@@ -1,10 +1,8 @@
 extern crate percent_encoding;
 
-
 use self::percent_encoding::{utf8_percent_encode, DEFAULT_ENCODE_SET};
-use util::*;
 use std::fmt;
-
+use util::*;
 
 #[derive(Debug, PartialEq)]
 pub struct App {
@@ -31,7 +29,6 @@ impl App {
             utf8_percent_encode(&self.words.join("_")[..], DEFAULT_ENCODE_SET).to_string()
         )
     }
-    
 
     pub fn query_url(&self) -> String {
         if is_chinese(&self.words.concat()[..]) {
@@ -48,8 +45,6 @@ impl App {
             )
         }
     }
-
-
 
     pub fn voice_url(&self) -> String {
         format!(
@@ -71,15 +66,13 @@ impl App {
 
 impl fmt::Display for App {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write! (
+        write!(
             f,
             "query words: {:?}, isMore: {}, isVoice: {}",
             self.words, self.config.is_more, self.config.is_voice,
         )
     }
 }
-
-
 
 #[derive(Debug, PartialEq)]
 struct Config {
