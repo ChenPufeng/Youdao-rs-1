@@ -9,8 +9,8 @@ use ansi_term::Colour;
 use std::env;
 use std::env::Args;
 use std::io::prelude::*;
-use tempfile::NamedTempFile;
 use std::process::Command;
+use tempfile::NamedTempFile;
 
 mod app;
 mod parser;
@@ -41,7 +41,7 @@ fn run() {
         }
 
         if app.is_voice() {
-            play_sound(&app);
+            let _ = play_sound(&app);
         }
     } else {
         display_usage();
@@ -92,11 +92,17 @@ fn display_usage() {
     );
 }
 
-fn play_sound(app: &App)  {
-    let mut voice_response = reqwest::get(app.voice_url().as_str()).unwrap();
+fn play_sound(app: &App) -> Result<(), String> {
+    let mut voice_response = reqwest::get(app.voice_url().as_str()).map_err(|e| format!("{}", e))?;
     let mut buf: Vec<u8> = vec![];
-    voice_response.copy_to(&mut buf).unwrap();
-    let mut file = NamedTempFile::new().unwrap();
-    file.write_all(&buf).unwrap();
-    let _ = Command::new("mpg123").arg(file.path().as_os_str()).output().unwrap();
+    voice_response
+        .copy_to(&mut buf)
+        .map_err(|e| format!("{}", e))?;
+    let mut file = NamedTempFile::new().map_err(|e| format!("{}", e))?;
+    file.write_all(&buf).map_err(|e| format!("{}", e))?;
+    let _ = Command::new("mpg123")
+        .arg(file.path().as_os_str())
+        .output()
+        .map_err(|e| format!("{}", e))?;
+    Ok(())
 }

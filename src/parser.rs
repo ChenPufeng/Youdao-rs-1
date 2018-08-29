@@ -27,7 +27,7 @@ pub fn parse_and_print(fragment: &Html, query: &str, is_multi: bool) -> Result<(
     Ok(())
 }
 
-pub fn query_sentences(fragment: &Html, is_more: bool)-> Result<(), ParseError> {
+pub fn query_sentences(fragment: &Html, is_more: bool) -> Result<(), ParseError> {
     let sentences_selector = Selector::parse("div#bilingual > ul > li")
         .map_err(|_| ParseError::CssParseError("parse div#bilingual > ul > li"))?;
     let sentences = fragment.select(&sentences_selector);
@@ -64,8 +64,8 @@ pub fn query_sentences(fragment: &Html, is_more: bool)-> Result<(), ParseError> 
 }
 
 fn hint_eng(fragment: &Html, query: &str) -> Result<bool, ParseError> {
-    let typo_selector = Selector::parse(".typo-rel")
-            .map_err(|_| ParseError::CssParseError("parse .typo-rel"))?;
+    let typo_selector =
+        Selector::parse(".typo-rel").map_err(|_| ParseError::CssParseError("parse .typo-rel"))?;
     let typos = fragment.select(&typo_selector).collect::<Vec<_>>();
     if typos.len() == 0 {
         return Ok(false);
@@ -84,7 +84,10 @@ fn hint_eng(fragment: &Html, query: &str) -> Result<bool, ParseError> {
             Some(w) => w,
             None => return Ok(false),
         };
-        println!("     {}", Colour::Green.paint(words.text().next().ok_or(ParseError::NilError)?));
+        println!(   
+            "     {}",
+            Colour::Green.paint(words.text().next().ok_or(ParseError::NilError)?)
+        );
         println!(
             "     {}",
             Colour::Yellow.paint(t.text().last().ok_or(ParseError::NilError)?.trim())
@@ -113,7 +116,6 @@ fn basic_query_chn(fragment: &Html) -> Result<(), ParseError> {
         );
         let joined_meaning = join(&meanings, ";");
         print!("  {}", Colour::Yellow.paint(joined_meaning));
-        
     }
 
     Ok(())
@@ -123,11 +125,11 @@ fn basic_query_eng(fragment: &Html, is_multi: bool) -> Result<(), ParseError> {
     println!("");
     if !is_multi {
         let pronounce_selector = Selector::parse("div.baav > span.pronounce")
-                    .map_err(|_| ParseError::CssParseError("parse div.baav > span.pronounce"))?;
+            .map_err(|_| ParseError::CssParseError("parse div.baav > span.pronounce"))?;
         let pronounce = fragment.select(&pronounce_selector);
         for (i, n) in pronounce.enumerate() {
             let phonetic_selector = Selector::parse("span.phonetic")
-                        .map_err(|_| ParseError::CssParseError("parse span.phonetic"))?;
+                .map_err(|_| ParseError::CssParseError("parse span.phonetic"))?;
             let phonetic = n.select(&phonetic_selector);
             if i == 0 {
                 print!("    {} ", Colour::Yellow.bold().paint("英："));
@@ -142,8 +144,9 @@ fn basic_query_eng(fragment: &Html, is_multi: bool) -> Result<(), ParseError> {
     println!("");
     println!("");
     //means
-    let means_selector = Selector::parse("div#phrsListTab > div.trans-container > ul")
-                                            .map_err(|_| ParseError::CssParseError("parse div#phrsListTab > div.trans-container > ul"))?;
+    let means_selector = Selector::parse("div#phrsListTab > div.trans-container > ul").map_err(
+        |_| ParseError::CssParseError("parse div#phrsListTab > div.trans-container > ul"),
+    )?;
     let means = fragment.select(&means_selector);
     for m in means {
         println!(
