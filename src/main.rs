@@ -1,18 +1,16 @@
 extern crate ansi_term;
 extern crate reqwest;
-extern crate rodio;
 extern crate scraper;
 extern crate tempfile;
 
 use self::scraper::Html;
 use ansi_term::Colour;
-use rodio::Source;
 
 use std::env;
 use std::env::Args;
 use std::io::prelude::*;
-use std::io::BufReader;
-use tempfile::tempfile;
+use tempfile::NamedTempFile;
+use std::process::Command;
 
 mod app;
 mod parser;
@@ -94,11 +92,7 @@ fn play_sound(app: &App)  {
     let mut voice_response = reqwest::get(app.voice_url().as_str()).unwrap();
     let mut buf: Vec<u8> = vec![];
     voice_response.copy_to(&mut buf).unwrap();
-    let device = rodio::default_output_device().unwrap();
-    let mut file = tempfile().unwrap();
+    let mut file = NamedTempFile::new().unwrap();
     file.write_all(&buf).unwrap();
-    let file = tempfile().unwrap();
-    let buf_reader = BufReader::new(file);
-    let source = rodio::Decoder::new(buf_reader).unwrap();
-    rodio::play_raw(&device, source.convert_samples());
+    let _ = Command::new("mpg123").arg(file.path().as_os_str()).output().unwrap();
 }

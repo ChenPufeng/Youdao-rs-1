@@ -9,6 +9,11 @@ use self::scraper::{Html, Selector};
 use ansi_term::Colour;
 use util::*;
 
+
+pub enum ParseError {
+    
+}
+
 pub fn parse_and_print(fragment: &Html, query: &str, is_multi: bool) -> Result<(), Box<::std::error::Error>> {
     if is_chinese(query) {
         basic_query_chn(&fragment)?;
