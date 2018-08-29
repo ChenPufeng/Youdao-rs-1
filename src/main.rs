@@ -27,14 +27,18 @@ fn run() {
             .unwrap();
         let document = Html::parse_document(&body);
 
-        parse_and_print(&document, &app.query_string(), app.words.len() > 1).unwrap();
+        if let Err(e) = parse_and_print(&document, &app.query_string(), app.words.len() > 1) {
+            panic!(format!("{:?}", e));
+        }
 
         let mut sentence_body = reqwest::get(app.query_sentence_url().as_str())
             .unwrap()
             .text()
             .unwrap();
         let sentence_document = Html::parse_document(&sentence_body);
-        query_sentences(&sentence_document, app.is_more());
+        if let Err(e) = query_sentences(&sentence_document, app.is_more()) {
+            panic!(format!("{:?}", e));
+        }
 
         if app.is_voice() {
             play_sound(&app);
