@@ -1,18 +1,16 @@
 extern crate ansi_term;
 extern crate reqwest;
-extern crate rodio;
 extern crate scraper;
 extern crate tempfile;
 
 use self::scraper::Html;
 use ansi_term::Colour;
-use rodio::Source;
 
 use std::env;
 use std::env::Args;
 use std::io::prelude::*;
-use std::io::BufReader;
-use tempfile::tempfile;
+use tempfile::NamedTempFile;
+use std::process::Command;
 
 mod app;
 mod parser;
@@ -29,14 +27,18 @@ fn run() {
             .unwrap();
         let document = Html::parse_document(&body);
 
-        parse_and_print(&document, &app.query_string(), app.words.len() > 1).unwrap();
+        if let Err(e) = parse_and_print(&document, &app.query_string(), app.words.len() > 1) {
+            panic!(format!("{:?}", e));
+        }
 
         let mut sentence_body = reqwest::get(app.query_sentence_url().as_str())
             .unwrap()
             .text()
             .unwrap();
         let sentence_document = Html::parse_document(&sentence_body);
-        query_sentences(&sentence_document, app.is_more());
+        if let Err(e) = query_sentences(&sentence_document, app.is_more()) {
+            panic!(format!("{:?}", e));
+        }
 
         if app.is_voice() {
             play_sound(&app);
@@ -94,11 +96,7 @@ fn play_sound(app: &App)  {
     let mut voice_response = reqwest::get(app.voice_url().as_str()).unwrap();
     let mut buf: Vec<u8> = vec![];
     voice_response.copy_to(&mut buf).unwrap();
-    let device = rodio::default_output_device().unwrap();
-    let mut file = tempfile().unwrap();
+    let mut file = NamedTempFile::new().unwrap();
     file.write_all(&buf).unwrap();
-    let file = tempfile().unwrap();
-    let buf_reader = BufReader::new(file);
-    let source = rodio::Decoder::new(buf_reader).unwrap();
-    rodio::play_raw(&device, source.convert_samples());
+    let _ = Command::new("mpg123").arg(file.path().as_os_str()).output().unwrap();
 }
