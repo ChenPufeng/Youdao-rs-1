@@ -56,10 +56,12 @@ pub fn query_sentences(fragment: &Html, is_more: bool) -> Result<(), ParseError>
             }
             println!("");
             if count == 4 && !is_more {
+                println!("");
                 return Ok(());
             }
         }
     }
+    println!("");
     Ok(())
 }
 
