@@ -72,7 +72,7 @@ fn parse_arguments(args: Args) -> Option<App> {
         }
         words.push(arg)
     }
-    let app = App::new(words, is_voice, is_more);
+    let app = App::new(words.into_iter().rev().collect(), is_voice, is_more);
     Some(app)
 }
 
