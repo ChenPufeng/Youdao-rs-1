@@ -2,6 +2,7 @@
 name = "youdao_rs"
 version = "0.1.0"
 authors = ["wangchi <addictedtoelixir@gmail.com>"]
+edition = "2018"
 
 [dependencies]
 ansi_term = "0.10"
@@ -10,3 +11,4 @@ reqwest = "0.8.6"
 percent-encoding = "1.0.1"
 itertools = "0.7.8"
 tempfile = "3.0.3"
+cpal = "0.8.2"

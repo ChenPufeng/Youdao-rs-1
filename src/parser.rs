@@ -7,7 +7,7 @@ use self::itertools::join;
 use self::scraper::element_ref::Select;
 use self::scraper::{Html, Selector};
 use ansi_term::Colour;
-use util::*;
+use crate::util::*;
 
 #[derive(Debug)]
 pub enum ParseError {
