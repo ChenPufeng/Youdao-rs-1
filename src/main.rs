@@ -1,9 +1,5 @@
-extern crate ansi_term;
-extern crate reqwest;
-extern crate scraper;
-extern crate tempfile;
 
-use self::scraper::Html;
+use scraper::Html;
 use ansi_term::Colour;
 
 use std::env;
@@ -16,8 +12,8 @@ mod app;
 mod parser;
 mod util;
 
-use app::*;
-use parser::*;
+use crate::app::*;
+use crate::parser::*;
 
 fn run() {
     if let Some(app) = parse_arguments(env::args()) {

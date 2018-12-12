@@ -2,7 +2,7 @@ extern crate percent_encoding;
 
 use self::percent_encoding::{utf8_percent_encode, DEFAULT_ENCODE_SET};
 use std::fmt;
-use util::*;
+use crate::util::*;
 
 #[derive(Debug, PartialEq)]
 pub struct App {
